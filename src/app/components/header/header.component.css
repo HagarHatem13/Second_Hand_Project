@@ -1,0 +1,267 @@
+.header {
+  background: white;
+  border-bottom: 1px solid #e5e9f2;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.logo-icon {
+  font-size: 28px;
+}
+
+.logo-text {
+  font-size: 22px;
+  font-weight: 700;
+  color: #07164f;
+}
+
+.logo-text .highlight {
+  color: #0065ff;
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #52649a;
+  font-weight: 500;
+  font-size: 15px;
+  transition: color 0.2s;
+  padding: 8px 0;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: #0065ff;
+}
+
+.nav-link.active {
+  color: #0065ff;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #0065ff;
+  border-radius: 2px;
+}
+
+.auth-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-btn {
+  text-decoration: none;
+  color: #0065ff;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.login-btn:hover {
+  background: #f0f5ff;
+}
+
+.signup-btn {
+  text-decoration: none;
+  background: #0065ff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s;
+}
+
+.signup-btn:hover {
+  background: #0052cc;
+  transform: translateY(-1px);
+}
+
+/* Icon Buttons */
+.icon-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: #52649a;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.icon-btn:hover {
+  color: #0065ff;
+  background: #f0f5ff;
+  border-color: #e0ebff;
+}
+
+.icon-btn svg {
+  flex-shrink: 0;
+}
+
+.icon-label {
+  display: inline;
+}
+
+.user-menu {
+  position: relative;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #0065ff, #00a8ff);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 101, 255, 0.3);
+}
+
+.dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e9f2;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  min-width: 240px;
+  overflow: hidden;
+  animation: dropdownFade 0.2s ease;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-header {
+  padding: 16px 18px;
+  background: #f8faff;
+}
+
+.user-email {
+  font-size: 14px;
+  color: #52649a;
+  word-break: break-all;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #e5e9f2;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 18px;
+  text-align: left;
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #07164f;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.dropdown-item svg {
+  color: #52649a;
+  flex-shrink: 0;
+}
+
+.dropdown-item:hover {
+  background: #f5f7fa;
+}
+
+.dropdown-item:hover svg {
+  color: #0065ff;
+}
+
+.dropdown-item.logout {
+  color: #e53935;
+}
+
+.dropdown-item.logout svg {
+  color: #e53935;
+}
+
+.dropdown-item.logout:hover {
+  background: #fff5f5;
+}
+
+@media (max-width: 900px) {
+  .icon-label {
+    display: none;
+  }
+  
+  .icon-btn {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .icon-btn {
+    padding: 8px;
+  }
+  
+  .auth-section {
+    gap: 4px;
+  }
+}
