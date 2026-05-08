@@ -1,0 +1,86 @@
+import { Component, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+
+@Component({
+  selector: 'app-signup',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterLink],
+  templateUrl: './signup.component.html',
+  styleUrls: ['./signup.component.css']
+})
+export class SignupComponent {
+  name = '';
+  email = '';
+  password = '';
+  confirmPassword = '';
+  errorMessage = signal<string>('');
+  isLoading = signal<boolean>(false);
+  showPassword = signal<boolean>(false);
+  showConfirmPassword = signal<boolean>(false);
+
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {
+    // Redirect if already logged in
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/home']);
+    }
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword.update(v => !v);
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword.update(v => !v);
+  }
+
+  async onSubmit(): Promise<void> {
+    this.errorMessage.set('');
+
+    if (!this.name || !this.email || !this.password || !this.confirmPassword) {
+      this.errorMessage.set('Please fill in all fields.');
+      return;
+    }
+
+    if (!this.isValidEmail(this.email)) {
+      this.errorMessage.set('Please enter a valid email address.');
+      return;
+    }
+
+    if (this.password.length < 6) {
+      this.errorMessage.set('Password must be at least 6 characters long.');
+      return;
+    }
+
+    if (this.password !== this.confirmPassword) {
+      this.errorMessage.set('Passwords do not match.');
+      return;
+    }
+
+    this.isLoading.set(true);
+
+    try {
+      const result = await this.authService.signup(this.name, this.email, this.password);
+      
+      if (result.success) {
+        this.router.navigate(['/home']);
+      } else {
+        this.errorMessage.set(result.message);
+      }
+    } catch {
+      this.errorMessage.set('An unexpected error occurred. Please try again.');
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+}
