@@ -1,0 +1,237 @@
+<div class="page-wrapper" (click)="closeDropdowns()">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo" (click)="goHome(); $event.stopPropagation()">
+        <span class="logo-icon">A</span>
+        <span class="logo-text">Analytics</span>
+      </div>
+
+      <div class="user-menu-wrapper">
+        <button 
+          class="user-btn" 
+          (click)="toggleUserMenu(); $event.stopPropagation()"
+          [class.active]="isUserMenuOpen()"
+        >
+          <span class="user-avatar">{{ authService.user()?.name?.charAt(0) || 'U' }}</span>
+          <span class="user-name">{{ authService.user()?.name || 'User' }}</span>
+          <span class="dropdown-arrow">{{ isUserMenuOpen() ? '▲' : '▼' }}</span>
+        </button>
+
+        @if (isUserMenuOpen()) {
+          <div class="user-dropdown">
+            <div class="user-info">
+              <span class="user-email">{{ authService.user()?.email }}</span>
+            </div>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item logout" (click)="logout()">
+              <span class="logout-icon">→</span>
+              Sign Out
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+    <div class="top-row">
+      <div>
+        <nav class="breadcrumb">
+          <span class="breadcrumb-link" (click)="goHome()">Home</span>
+          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-current">Analytics</span>
+        </nav>
+
+        <h1>Analytics Report</h1>
+        <p class="subtitle">Track your listing performance and sales activity.</p>
+      </div>
+
+      <div class="month-dropdown-wrapper">
+        <button 
+          class="month-btn" 
+          (click)="toggleMonthDropdown(); $event.stopPropagation()"
+          [class.active]="isMonthDropdownOpen()"
+        >
+          <span class="calendar-icon">📅</span>
+          {{ selectedMonth() }}
+          <span class="dropdown-arrow">{{ isMonthDropdownOpen() ? '▲' : '▼' }}</span>
+        </button>
+
+        @if (isMonthDropdownOpen()) {
+          <div class="month-dropdown">
+            @for (month of months; track month) {
+              <button 
+                class="month-option"
+                [class.selected]="selectedMonth() === month"
+                (click)="selectMonth(month); $event.stopPropagation()"
+              >
+                {{ month }}
+                @if (selectedMonth() === month) {
+                  <span class="check-mark">✓</span>
+                }
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      @for (stat of stats(); track stat.title) {
+        <div class="stat-card">
+          <div class="stat-icon" [attr.data-icon]="stat.icon">
+            @switch (stat.icon) {
+              @case ('grid') { <span>▣</span> }
+              @case ('bag') { <span>🛍</span> }
+              @case ('heart') { <span>♡</span> }
+              @case ('message') { <span>💬</span> }
+            }
+          </div>
+          <div>
+            <p>{{ stat.title }}</p>
+            <h2>{{ stat.value }}</h2>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="charts-grid">
+      <!-- Bar Chart -->
+      <section class="card views-card">
+        <h2>Listing Views</h2>
+        <div class="bar-chart">
+          <div class="y-axis">
+            <span>{{ maxChartValue() }}</span>
+            <span>{{ (maxChartValue() * 0.75) | number:'1.0-0' }}</span>
+            <span>{{ (maxChartValue() * 0.5) | number:'1.0-0' }}</span>
+            <span>{{ (maxChartValue() * 0.25) | number:'1.0-0' }}</span>
+            <span>0</span>
+          </div>
+          <div class="chart-area">
+            <div class="grid-line line-1"></div>
+            <div class="grid-line line-2"></div>
+            <div class="grid-line line-3"></div>
+            <div class="grid-line line-4"></div>
+            <div class="bars">
+              @for (month of chartMonths(); track month.name) {
+                <div class="bar-item">
+                  <div 
+                    class="bar" 
+                    [style.height.px]="getBarHeight(month.views)"
+                    [title]="month.views + ' views'"
+                  ></div>
+                  <span>{{ month.name }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Donut Chart -->
+      <section class="card category-card">
+        <h2>Top Categories</h2>
+        <div class="category-content">
+          <div class="donut">
+            <div class="donut-hole"></div>
+            <span class="percent p40">40%</span>
+            <span class="percent p30">30%</span>
+            <span class="percent p20">20%</span>
+            <span class="percent p10">10%</span>
+          </div>
+          <div class="legend">
+            @for (category of categories; track category.name) {
+              <p>
+                <span class="dot" [style.background]="category.color"></span>
+                {{ category.name }}
+              </p>
+            }
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Bottom Grid -->
+    <div class="bottom-grid">
+      <!-- Table -->
+      <section class="card table-card">
+        <h2>Top Performing Listings</h2>
+        <table>
+          <thead>
+            <tr>
+              <th 
+                class="sortable" 
+                (click)="sortTable('item')"
+                [class.sorted]="sortKey() === 'item'"
+              >
+                Item{{ getSortIndicator('item') }}
+              </th>
+              <th 
+                class="sortable" 
+                (click)="sortTable('views')"
+                [class.sorted]="sortKey() === 'views'"
+              >
+                Views{{ getSortIndicator('views') }}
+              </th>
+              <th 
+                class="sortable" 
+                (click)="sortTable('saves')"
+                [class.sorted]="sortKey() === 'saves'"
+              >
+                Saves{{ getSortIndicator('saves') }}
+              </th>
+              <th 
+                class="sortable" 
+                (click)="sortTable('status')"
+                [class.sorted]="sortKey() === 'status'"
+              >
+                Status{{ getSortIndicator('status') }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (listing of sortedListings(); track listing.item) {
+              <tr>
+                <td>{{ listing.item }}</td>
+                <td>{{ listing.views | number }}</td>
+                <td>{{ listing.saves }}</td>
+                <td>
+                  <span 
+                    class="status"
+                    [class.sold]="listing.status === 'Sold'"
+                    [class.active]="listing.status === 'Active'"
+                  >
+                    {{ listing.status }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Summary -->
+      <section class="card summary-card">
+        <div class="summary-item">
+          <div class="summary-icon star">☆</div>
+          <div>
+            <p>Best performing item:</p>
+            <h3>{{ bestPerformingItem() }}</h3>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="summary-item">
+          <div class="summary-icon graph">↗</div>
+          <div>
+            <p>Most saved category:</p>
+            <h3>Electronics</h3>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
