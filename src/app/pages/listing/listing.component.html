@@ -1,0 +1,93 @@
+<main class="container">
+
+  <section class="page-title">
+    <h1>All Listings</h1>
+    <p>Browse available second-hand items.</p>
+
+    <div class="search-box">
+      <span>&#128269;</span>
+      <input 
+        type="text" 
+        placeholder="Search for items, categories or locations..." 
+        [(ngModel)]="searchText"
+      />
+      <button>Search</button>
+    </div>
+  </section>
+
+  <section class="content-layout">
+
+    <!-- Filters -->
+    <aside class="filter-card">
+      <h2>Filters</h2>
+
+      <div class="filter-body">
+
+        <label>Category</label>
+        <select [(ngModel)]="selectedCategory">
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+
+        <label>Price Range</label>
+        <div class="price-row">
+          <input type="text" placeholder="Min" [(ngModel)]="minPrice" />
+          <span>-</span>
+          <input type="text" placeholder="Max" [(ngModel)]="maxPrice" />
+        </div>
+
+        <label>Condition</label>
+
+        <div class="check-row" *ngFor="let cond of conditions">
+          <input 
+            type="checkbox" 
+            [checked]="isConditionSelected(cond)"
+            (change)="toggleCondition(cond)"
+          />
+          <span>{{ cond }}</span>
+        </div>
+
+        <button class="apply-btn" (click)="applyFilters()">Apply</button>
+
+      </div>
+    </aside>
+
+    <!-- Listings -->
+    <section class="listings-section">
+
+      <div class="listing-grid">
+        <div class="listing-card" *ngFor="let item of paginatedListings">
+          <img [src]="item.image" [alt]="item.name" />
+
+          <div class="listing-info">
+            <h3>{{ item.name }}</h3>
+            <p>{{ item.price }}</p>
+            <button (click)="viewItem(item)">View</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="paginatedListings.length === 0">
+        <p>No items match your filters.</p>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" *ngIf="paginatedListings.length > 0">
+        <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">&#8249;</button>
+
+        <button
+          *ngFor="let page of pages"
+          [class.active]="page === currentPage"
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+
+        <button *ngIf="pages.length > 0" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === pages.length">&#8250;</button>
+      </div>
+
+    </section>
+
+  </section>
+
+</main>
