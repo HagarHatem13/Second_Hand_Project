@@ -1,0 +1,80 @@
+<div class="page">
+  <!-- Hero -->
+  <main class="container">
+    <section class="hero">
+      <h1>Buy &amp; Sell Second-hand Items</h1>
+      <p>Find great deals on quality pre-owned items in your community.</p>
+
+      <div class="search-box">
+        <span class="search-icon">⌕</span>
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+          placeholder="Search for items, categories or locations..." 
+        />
+        <button (click)="onSearch()">Search</button>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+      <div 
+        class="category-card" 
+        *ngFor="let category of categories"
+        (click)="onCategoryClick(category)"
+      >
+        <div class="category-icon" [ngClass]="category.color">
+          {{ category.icon }}
+        </div>
+        <h3>{{ category.name }}</h3>
+      </div>
+    </section>
+
+    <!-- Active Filter -->
+    <div class="filter-bar" *ngIf="searchQuery">
+      <span>Showing results for: <strong>{{ searchQuery }}</strong></span>
+      <button class="clear-btn" (click)="clearFilter()">Clear Filter</button>
+    </div>
+
+    <!-- Featured Listings -->
+    <section class="featured">
+      <h2>{{ searchQuery ? 'Search Results' : 'Featured Listings' }}</h2>
+
+      <div class="listing-grid" *ngIf="filteredListings.length > 0">
+        <div class="listing-card" *ngFor="let item of filteredListings">
+          <img [src]="item.image" [alt]="item.name" />
+
+          <div class="listing-info">
+            <h3>{{ item.name }}</h3>
+            <p class="price">{{ item.price }}</p>
+            <button (click)="viewItem(item)">View</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-results" *ngIf="filteredListings.length === 0">
+        <p>No items found matching your search.</p>
+        <button (click)="clearFilter()">View All Items</button>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-section">
+      <h2>How it works</h2>
+
+      <div class="steps">
+        <div class="step" *ngFor="let step of steps; let last = last">
+          <div class="step-icon">{{ step.icon }}</div>
+
+          <div>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.text }}</p>
+          </div>
+
+          <span class="arrow" *ngIf="!last">›</span>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
