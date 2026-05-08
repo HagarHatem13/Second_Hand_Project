@@ -1,0 +1,134 @@
+<div class="page">
+  <!-- Main Content -->
+  <main class="container">
+    <div class="breadcrumb">
+      <span class="link" (click)="goBack()">All Listings</span>
+      <span>›</span>
+      <span>Item Details</span>
+    </div>
+
+    <!-- Product Section -->
+    <section class="product-section" *ngIf="item">
+      <div class="product-image">
+        <img [src]="item.image" [alt]="item.name" />
+      </div>
+
+      <div class="product-card">
+        <h1>{{ item.name }}</h1>
+        <h2>{{ item.price }}</h2>
+
+        <div class="info-list">
+          <div class="info-row">
+            <span class="icon">▣</span>
+            <strong>Condition:</strong>
+            <p>{{ item.condition }}</p>
+          </div>
+
+          <div class="info-row">
+            <span class="icon">⌖</span>
+            <strong>Location:</strong>
+            <p>{{ item.location }}</p>
+          </div>
+
+          <div class="info-row">
+            <span class="icon">▤</span>
+            <strong>Category:</strong>
+            <p>{{ item.category }}</p>
+          </div>
+
+          <div class="info-row">
+            <span class="icon">♙</span>
+            <strong>Seller:</strong>
+            <p>{{ item.seller }}</p>
+          </div>
+        </div>
+
+        <div class="line"></div>
+
+        <p class="short-description">
+          {{ item.description.substring(0, 150) }}...
+        </p>
+
+        <div class="buttons">
+          <button class="message-btn" (click)="openMessageModal()">
+            💬 Message Seller
+          </button>
+          <button 
+            class="wishlist-btn" 
+            [class.active]="isInWishlist"
+            (click)="toggleWishlist()"
+          >
+            {{ isInWishlist ? '♥ In Wishlist' : '♡ Add to Wishlist' }}
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Description -->
+    <section class="description-card" *ngIf="item">
+      <h3>Item Description</h3>
+      <p>{{ item.description }}</p>
+    </section>
+
+    <!-- Related Items -->
+    <section class="related-section">
+      <h3>Related Items</h3>
+
+      <div class="related-grid">
+        <div class="related-card" *ngFor="let relatedItem of relatedItems">
+          <img [src]="relatedItem.image" [alt]="relatedItem.name" />
+
+          <div class="related-info">
+            <h4>{{ relatedItem.name }}</h4>
+            <p>{{ relatedItem.price }}</p>
+            <button (click)="viewRelatedItem(relatedItem)">View</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<!-- Message Modal -->
+<div 
+  class="modal-overlay" 
+  *ngIf="showMessageModal"
+  (click)="closeMessageModal()"
+>
+
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <h3>Message {{ item?.seller }}</h3>
+
+    <textarea
+      [(ngModel)]="messageText"
+      placeholder="Write your message here..."
+      rows="5"
+    ></textarea>
+
+    <!-- Success Message -->
+    <p class="success-message" *ngIf="messageSent">
+      Message sent successfully!
+    </p>
+
+    <div class="modal-buttons">
+
+      <button 
+        class="send-btn"
+        (click)="sendMessage()"
+        [disabled]="!messageText.trim()"
+      >
+        Send Message
+      </button>
+
+      <button 
+        class="cancel-btn"
+        (click)="closeMessageModal()"
+      >
+        Cancel
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
