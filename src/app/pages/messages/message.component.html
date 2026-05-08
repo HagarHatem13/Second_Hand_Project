@@ -1,0 +1,100 @@
+<main class="container">
+
+  <div class="breadcrumb">
+    <span>Home</span>
+    <span>></span>
+    <span>Messages</span>
+  </div>
+
+  <h1>Messages</h1>
+  <p class="subtitle">Chat with buyers and sellers about your items.</p>
+
+  <div class="messages-layout">
+
+    <!-- Inbox -->
+    <section class="inbox-card">
+      <h2>Inbox</h2>
+
+      <div class="search-box">
+        <span>&#128269;</span>
+        <input 
+          type="text" 
+          placeholder="Search messages..." 
+          [(ngModel)]="searchText"
+        />
+      </div>
+
+      <div
+        class="contact"
+        *ngFor="let contact of filteredContacts"
+        [class.active]="contact.active"
+        (click)="selectContact(contact)"
+      >
+        <div class="avatar">&#128100;</div>
+
+        <div class="contact-info">
+          <h3>{{ contact.name }}</h3>
+          <p>{{ contact.message }}</p>
+        </div>
+
+        <span class="contact-time">{{ contact.time }}</span>
+      </div>
+    </section>
+
+    <!-- Chat -->
+    <section class="chat-card">
+
+      <div class="chat-header">
+        <div class="avatar">&#128100;</div>
+
+        <div>
+          <h3>{{ activeContact.name }}</h3>
+          <p><span class="online-dot"></span> Online</p>
+        </div>
+
+        <button class="menu-btn">&#8942;</button>
+      </div>
+
+      <div class="listing-box">
+        <img
+          src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300"
+          alt="Laptop"
+        />
+
+        <div>
+          <h4>Laptop - $250</h4>
+          <a href="#">View Listing</a>
+        </div>
+      </div>
+
+      <div class="chat-body">
+        <div
+          class="message-row"
+          *ngFor="let msg of messages"
+          [class.sent]="msg.type === 'sent'"
+          [class.received]="msg.type === 'received'"
+        >
+          <span class="message-time">{{ msg.time }}</span>
+          <div class="message-bubble">
+            {{ msg.text }}
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-input">
+        <button class="attach-btn">&#128206;</button>
+
+        <input
+          type="text"
+          placeholder="Type your message..."
+          [(ngModel)]="newMessage"
+          (keydown.enter)="sendMessage()"
+        />
+
+        <button class="send-btn" (click)="sendMessage()">Send</button>
+      </div>
+
+    </section>
+
+  </div>
+</main>
