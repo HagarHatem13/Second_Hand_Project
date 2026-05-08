@@ -1,0 +1,138 @@
+<div class="page">
+  <main class="container">
+    <div class="breadcrumb">
+      <span class="link" routerLink="/home">Home</span>
+      <span>›</span>
+      <span>Create Listing</span>
+    </div>
+
+    <div class="title-section">
+      <h1>Create New Listing</h1>
+      <p>Add your item details and publish it for buyers.</p>
+    </div>
+
+    <div class="content-grid">
+      <form [formGroup]="listingForm" (ngSubmit)="onSubmit()" class="form-card">
+        <h2>Listing Information</h2>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Item Title</label>
+            <input
+              type="text"
+              formControlName="title"
+              placeholder="Example: Used Laptop"
+            />
+            <small *ngIf="isInvalid('title')">Title is required.</small>
+          </div>
+
+          <div class="form-group">
+            <label>Category</label>
+            <select formControlName="category">
+              <option value="">Select category</option>
+              <option value="electronics">Electronics</option>
+              <option value="furniture">Furniture</option>
+              <option value="clothes">Clothes</option>
+              <option value="books">Books</option>
+              <option value="other">Other</option>
+            </select>
+            <small *ngIf="isInvalid('category')">Category is required.</small>
+          </div>
+
+          <div class="form-group">
+            <label>Price ($)</label>
+            <div class="price-input">
+              <input
+                type="number"
+                formControlName="price"
+                placeholder="Enter price"
+              />
+              <span>USD</span>
+            </div>
+            <small *ngIf="isInvalid('price')">Price must be greater than 0.</small>
+          </div>
+
+          <div class="form-group">
+            <label>Location</label>
+            <input
+              type="text"
+              formControlName="location"
+              placeholder="Example: Cairo"
+            />
+            <small *ngIf="isInvalid('location')">Location is required.</small>
+          </div>
+
+          <div class="form-group textarea-group">
+            <label>Description</label>
+            <textarea
+              formControlName="description"
+              placeholder="Write a detailed description of your item (min 20 characters)"
+            ></textarea>
+            <small *ngIf="isInvalid('description')">
+              Description must be at least 20 characters.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Photo URL</label>
+          <input
+            type="text"
+            formControlName="photoUrl"
+            placeholder="Paste image URL (e.g., https://example.com/image.jpg)"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Seller Contact Information</label>
+          <input
+            type="text"
+            formControlName="sellerContact"
+            placeholder="Phone number or email"
+          />
+          <small *ngIf="isInvalid('sellerContact')">
+            Enter a valid phone number or email.
+          </small>
+        </div>
+
+        <div class="buttons">
+          <button 
+            type="submit" 
+            class="post-btn"
+            [disabled]="isSubmitting"
+          >
+            {{ isSubmitting ? 'Creating...' : 'Create Listing' }}
+          </button>
+          <button type="button" class="cancel-btn" (click)="onCancel()">Cancel</button>
+        </div>
+      </form>
+
+      <div class="sidebar">
+        <div class="preview-card">
+          <h2>Preview</h2>
+          <div class="preview-box">
+            <div class="preview-image">
+              <img *ngIf="previewImage" [src]="previewImage" alt="Preview" />
+              <span *ngIf="!previewImage">📷</span>
+            </div>
+            <div class="preview-info">
+              <h3>{{ getFormValue('title') || 'Item Title' }}</h3>
+              <p>{{ getFormValue('price') ? '$' + getFormValue('price') : '$0' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tips-card">
+          <h2>Tips for a Great Listing</h2>
+          <ul>
+            <li>Use clear, high-quality photos</li>
+            <li>Write a detailed description</li>
+            <li>Set a fair and competitive price</li>
+            <li>Be honest about the item condition</li>
+            <li>Respond quickly to inquiries</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
