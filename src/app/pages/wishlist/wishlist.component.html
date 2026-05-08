@@ -1,0 +1,68 @@
+<main class="container">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <span>Home</span>
+    <span>></span>
+    <span>Wishlist</span>
+  </div>
+
+  <!-- Title -->
+  <section class="title-section">
+    <h1>My Wishlist</h1>
+    <p>Items you saved for later.</p>
+  </section>
+
+  <!-- Search Box -->
+  <section class="search-card">
+    <h2>{{ wishlistItems.length }} Saved Items</h2>
+
+    <div class="search-area">
+      <div class="search-input">
+        <span>&#128269;</span>
+        <input 
+          type="text" 
+          placeholder="Search your wishlist..."
+          [(ngModel)]="searchText"
+        />
+      </div>
+
+      <button>Search</button>
+    </div>
+  </section>
+
+  <!-- Wishlist Cards -->
+  <section class="items-grid">
+
+    <div class="item-card" *ngFor="let item of filteredItems">
+      <div class="image-box">
+        <img [src]="item.image" [alt]="item.name" />
+        <button class="heart">&#9829;</button>
+      </div>
+
+      <div class="item-info">
+        <h3>{{ item.name }}</h3>
+        <p>{{ item.price }}</p>
+
+        <div class="card-buttons">
+          <button class="view-btn" (click)="viewItem(item)">View</button>
+          <button class="remove-btn" (click)="removeItem(item.id)">Remove</button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Empty Message -->
+  <section class="empty-box" *ngIf="filteredItems.length === 0">
+    <div class="heart-icon">&#9825;</div>
+    <p>No items found in your wishlist.</p>
+  </section>
+
+  <!-- Bottom Message -->
+  <section class="keep-box" *ngIf="filteredItems.length > 0">
+    <div class="heart-icon">&#9825;</div>
+    <p>Keep browsing to save more items.</p>
+  </section>
+
+</main>
